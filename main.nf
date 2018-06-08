@@ -1,6 +1,10 @@
 def os_name = System.properties['os.name'] // Linux
 params.output_dir = "output"
 params.regions = "regions.bed"
+
+// path to bin dir needed for macOS
+bin_dir = new File("bin").getCanonicalPath()
+
 Channel.from([
     [file('input/Normal-1.dd.ra.rc.bam'), file('input/Normal-1.dd.ra.rc.bam.bai')],
     [file('input/Tumor-1.dd.ra.rc.bam'), file('input/Tumor-1.dd.ra.rc.bam.bai')],
@@ -22,24 +26,51 @@ process run_IGV {
     snapshotDirectory = "${bam}_snapshots"
     if (os_name == "Linux")
         """
-        echo "${os_name}"
         mkdir "${snapshotDirectory}"
         make-batchscript.py "${bam}" -r "${regions}" --output-dir "${snapshotDirectory}"
-        which xvfb-run
+
+        # use system installed xvfb-run
         xvfb-run --auto-servernum igv.sh -b "${batchscript}"
         """
         // Command error:
         //   /usr/bin/xvfb-run: line 186: kill: (3710) - No such process
+    else if(os_name == "Mac OS X")
+        """
+        set -x
+        mkdir "${snapshotDirectory}"
+        make-batchscript.py "${bam}" -r "${regions}" --output-dir "${snapshotDirectory}"
+
+        xvfb-run.sh --auto-servernum igv.sh -b "${batchscript}"
+        """
+        // find_free_servernum() {
+        //     local i=99
+        //     while [ -f /tmp/.X\$i-lock ]; do
+        //         i=\$((\$i + 1))
+        //     done
+        //     echo \$i
+        // }
+        //
+        // serv_num="\$(find_free_servernum)"
+        // Xvfb :\${serv_num} &
+        // xvfb_pid=\$!
+        // sleep 3
+        // DISPLAY=:\${serv_num} igv.sh -b "${batchscript}"
+        // # xvfb-run-macOS --auto-servernum "${bin_dir}"/igv.sh -b "${batchscript}"
+        // find_server_number () {
+        //     # Search for an open Xvfb port to render into
+        //     for _serv_num in \$(seq 1 100000); do
+        //         if ! (xdpyinfo -display :\${_serv_num})&>/dev/null; then
+        //             echo "\$_serv_num" && break
+        //         fi
+        //     done
+        // }
+        //
+        // # create Xvfb on server port and run IGV
+        // # serv_num="\$(find_server_number)"
+        // # (Xvfb :\${serv_num} &) && DISPLAY=:\${serv_num} igv.sh -b "${batchscript}"
     else
         error "Unsupported operating system detected: ${os_name}"
-    // # Search for an open Xvfb port to render into
-    // for serv_num in \$(seq 1 100000); do
-    //     if ! (xdpyinfo -display :\${serv_num})&>/dev/null; then
-    //         echo "serv_num:\$serv_num" && break
-    //     fi
-    // done
     //
-    // # create Xvfb on server port and run IGV
     // set -x
     // xvfb_pid="\$( Xvfb :\${serv_num} & echo "\$!" )"
     // echo "xvfb_pid:\$xvfb_pid"
