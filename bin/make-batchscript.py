@@ -71,6 +71,7 @@ def main(**kwargs):
     for region in regions:
         append_string("goto " + region['loc'], batchscript_file)
         append_string("snapshot " + region['filename'], batchscript_file)
+    append_string("exit", batchscript_file)
 
 def parse():
     """
@@ -79,6 +80,8 @@ def parse():
     parser = argparse.ArgumentParser(description='IGV batchscript creator')
     parser.add_argument("input_files", nargs='+', help="pathes to the files to create snapshots from e.g. .bam, .bigwig, etc.")
     parser.add_argument("-r", "--regions", default = "regions.bed", dest = 'regions_file', metavar = 'regions_file', help="Path to .bed formatted regions file")
+    parser.add_argument("-o", "--output-dir", default = "IGV_snapshots", dest = 'snapshotDirectory', metavar = 'Snapshot dir', help="Output directory to save snapshots to")
+
     args = parser.parse_args()
     main(**vars(args))
 
