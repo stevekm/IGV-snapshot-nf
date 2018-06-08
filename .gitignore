@@ -1,3 +1,7 @@
 nextflow
 IGV_2.3.81
 igv.sh
+igv.*
+
+*.jar
+bin/readme.txt

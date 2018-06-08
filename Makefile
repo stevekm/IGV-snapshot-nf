@@ -11,14 +11,13 @@ update: ./nextflow
 
 IGV: bin/igv.sh
 
-bin/IGV_2.3.81:
+bin/igv.sh:
 	cd bin && \
-	wget http://data.broadinstitute.org/igv/projects/downloads/2.3/IGV_2.3.81.zip -O  IGV_2.3.81.zip && \
-	unzip IGV_2.3.81.zip && \
-	rm -f unzip IGV_2.3.81.zip
-
-bin/igv.sh: bin/IGV_2.3.81
-	cd bin && ln -fs bin/IGV_2.3.81/igv.sh
+	wget http://data.broadinstitute.org/igv/projects/downloads/2.4/IGV_2.4.10.zip && \
+	unzip IGV_2.4.10.zip && \
+	rm -f unzip IGV_2.4.10.zip && \
+	mv IGV_2.4.10/* . && \
+	rm -rf IGV_2.4.10
 
 # ~~~~~ RUN PIPELINE ~~~~~ #
 run: install
