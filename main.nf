@@ -34,14 +34,27 @@ process run_IGV {
         """
         // Command error:
         //   /usr/bin/xvfb-run: line 186: kill: (3710) - No such process
-    else if(os_name == "Mac OS X")
-        """
-        set -x
-        mkdir "${snapshotDirectory}"
-        make-batchscript.py "${bam}" -r "${regions}" --output-dir "${snapshotDirectory}"
-
-        xvfb-run.sh --auto-servernum igv.sh -b "${batchscript}"
-        """
+    // else if(os_name == "Mac OS X")
+        // """
+        // set -x
+        // # mkdir "${snapshotDirectory}"
+        // make-batchscript.py "${bam}" -r "${regions}" --output-dir "${snapshotDirectory}"
+        //
+        // find_server_number () {
+        //     # Search for an open Xvfb port to render into
+        //     for _serv_num in \$(seq 1 100000); do
+        //         if ! (xdpyinfo -display :\${_serv_num})&>/dev/null; then
+        //             echo "\$_serv_num" && break
+        //         fi
+        //     done
+        // }
+        // serv_num=\$(find_server_number)
+        // echo "server num: \${serv_num}"
+        //
+        // Xvfb :\${serv_num} &
+        // xvfb_pid=\$!
+        // """
+        // # xvfb-run.sh --auto-servernum igv.sh -b "${batchscript}"
         // find_free_servernum() {
         //     local i=99
         //     while [ -f /tmp/.X\$i-lock ]; do
