@@ -8,3 +8,4 @@ bin/readme.txt
 .nextflow/
 work/
 .nextflow.log
+*.simg
