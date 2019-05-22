@@ -16,9 +16,13 @@ From: ubuntu:16.04
 
     export PATH="/IGV_2.4.10/:${PATH}"
 
+    # make a dummy batch script in order to load the hg19 genome into the container
+    # https://software.broadinstitute.org/software/igv/PortCommands
+    printf 'new\ngenome hg19\nexit\n' > /genome.bat
+    xvfb-run --auto-servernum --server-num=1 igv.sh -b /genome.bat
+
 %test
-    # lofreq version
-    # bcftools --version
+    which igv.sh
 
 %environment
     export PATH="/IGV_2.4.10/:${PATH}"
