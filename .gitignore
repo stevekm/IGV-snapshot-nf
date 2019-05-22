@@ -9,3 +9,7 @@ bin/readme.txt
 work/
 .nextflow.log
 *.simg
+trace.txt*
+nextflow.html*
+.nextflow.log*
+timeline.html*

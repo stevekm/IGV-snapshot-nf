@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 """
 Script to create an IGV batchscript
+https://software.broadinstitute.org/software/igv/PortCommands
+http://software.broadinstitute.org/software/igv/automation
+https://software.broadinstitute.org/software/igv/batch
 
 example IGV batch script:
 
@@ -71,6 +74,7 @@ def main(**kwargs):
     for region in regions:
         append_string("goto " + region['loc'], batchscript_file)
         append_string("snapshot " + region['filename'], batchscript_file)
+    append_string("exit", batchscript_file)
 
 def parse():
     """
