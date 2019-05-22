@@ -1,7 +1,7 @@
 SHELL:=/bin/bash
 VAR:=
 
-# make docker-build VAR=Singularity-2.4
+STAGEDIR:=$(shell python -c 'import os; print(os.path.realpath("staging"))')
 
 # ~~~~~ DOCKER ~~~~~ #
 DOCKERFILE:=$(VAR)/Dockerfile
@@ -12,7 +12,10 @@ docker-build:
 	docker build -t "$(DOCKERTAG)" .
 
 docker-test:
-	docker run --rm -ti "$(DOCKERTAG)" bash
+	docker run \
+	--rm -ti \
+	-v "$(STAGEDIR):/staging" \
+	"$(DOCKERTAG)" bash
 
 # ~~~~~ SINGULARITY ~~~~~ #
 SINGULARITYFILE:=$(VAR)/Singularity.$(VAR)
@@ -37,5 +40,6 @@ singularity-test:
 	docker run --privileged \
 	--rm -ti \
 	-v "$(SINGULARITYDIR):/image" \
+	-v "$(STAGEDIR):/staging" \
 	"$(SINGULARITYDOCKERTAG)" \
-	bash -c "singularity shell /image/$(VAR).simg"
+	bash -c "singularity shell --bind /staging:/staging /image/$(VAR).simg"
