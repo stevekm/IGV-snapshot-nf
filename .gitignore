@@ -13,3 +13,5 @@ trace.txt*
 nextflow.html*
 .nextflow.log*
 timeline.html*
+output/
+.DS_Store

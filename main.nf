@@ -30,11 +30,13 @@ Channel.from([
 Channel.fromPath(params.regions).set { regions_file }
 
 process run_IGV {
+    publishDir "${params.outputDir}", mode: 'copy'
+
     input:
     set file(tumor_bam), file(tumor_bai), file(normal_bam), file(normal_bai), file(regions) from input_bams.combine(regions_file)
 
-    // output:
-    // set file(snapshotDirectory)
+    output:
+    file(snapshotDirectory)
 
     script:
     batchscript = "snapshots.bat"
@@ -43,7 +45,7 @@ process run_IGV {
     genome = 'hg19'
     """
     mkdir "${snapshotDirectory}"
-    
+
     # make batchscript for IGV to run
     make-batchscript.py "${tumor_bam}" "${normal_bam}" \
     -r "${regions}" \
@@ -59,11 +61,4 @@ process run_IGV {
     igv.sh \
     -b "${batchscript}"
     """
-    // if [ "\$(uname)"=="Darwin" ];  then
-    //     # use the copy of the script included
-    //     xvfb-run-macOS --auto-servernum --server-num=1 igv.sh -b "${batchscript}"
-    // else
-    //     # use the system copy of the script
-    //     xvfb-run --auto-servernum --server-num=1 igv.sh -b "${batchscript}"
-    // fi
 }
