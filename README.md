@@ -85,3 +85,17 @@ Duration    : 1m 20s
 CPU hours   : (a few seconds)
 Succeeded   : 1
 ```
+
+Example snapshot output:
+
+![](https://raw.githubusercontent.com/stevekm/IGV-snapshot-nf/output/output/snapshots/chr13_113976596_113976736.png)
+
+# Software
+
+- Tested with macOS 10.12.6 and RHEL 7
+
+- Nextflow (requires Java 8+ and `bash`)
+
+- IGV 2.4.10
+
+- Python
